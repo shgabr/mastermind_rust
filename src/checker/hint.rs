@@ -1,8 +1,7 @@
 use std::hash::Hash;
 use std::marker::PhantomData;
 
-mod pattern;
-use pattern::Pattern;
+use super::pattern::Pattern;
 
 pub struct Hint <T,const N: usize> 
 where 
@@ -19,7 +18,7 @@ impl <T,const N: usize> Hint <T,N>
 where 
     T: Eq + Hash + Clone
     {
-    fn new(difficulty: i32) -> Self {
+    pub fn new(difficulty: i32) -> Self {
         Hint {
             difficulty,
             right_guess: 0,
@@ -28,7 +27,7 @@ where
             phantom: PhantomData
         }
     }
-    fn provide_hint(&mut self, truth: Pattern<T,N>, guess: Pattern<T,N>) {
+    pub fn provide_hint(&mut self, truth: Pattern<T,N>, guess: Pattern<T,N>) {
         let mut right_guess = 0;
         let mut wrong_place = 0;
         let mut right_indices = Vec::new();

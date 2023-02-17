@@ -3,6 +3,9 @@
 mod game_rules;
 use game_rules::GameRules;
 
+mod checker;
+use checker::Checker;
+
 
 fn get_input_game () -> (i32, i32, i32, i32){
 
