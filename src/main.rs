@@ -69,6 +69,24 @@ fn create_game() -> GameRules {
     return game_rule;
 }
 
+fn play_game(game_rules: GameRules) {
+
+    let arr = ["1", "2", "3", "4"];
+    let mut checker = Checker::new(arr, game_rules);
+
+    let g1 = ["2", "3", "1", "4"];
+    let g2 = ["1", "2", "3", "4"];
+
+    println!("Checking the first guess...");
+    checker.clone().check(g1);
+    checker.current_trails += 11;
+    println!("Checking the second guess...");
+    let fl = checker.clone().check(g2);
+    println!("fl: {}", fl);
+    checker.current_trails += 1;
+
+}
+
 fn main() {
     println!("Welcome to Mastermind Game!\n");
 
@@ -80,4 +98,6 @@ fn main() {
     println!("******************************\n");
 
     println!("Game is starting...\n");
+
+    play_game(game_rule);
 }
