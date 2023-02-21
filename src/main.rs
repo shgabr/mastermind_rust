@@ -6,6 +6,9 @@ use game_rules::GameRules;
 mod checker;
 use checker::Checker;
 
+mod guesser;
+use guesser::Guesser;
+
 
 fn get_input_game () -> (i32, i32, i32, i32){
 
@@ -72,18 +75,33 @@ fn create_game() -> GameRules {
 fn play_game(game_rules: GameRules) {
 
     let arr = ["1", "2", "3", "4"];
-    let mut checker = Checker::new(arr, game_rules);
 
-    let g1 = ["2", "3", "1", "4"];
-    let g2 = ["1", "2", "3", "4"];
+    let mut checker = Checker::new(arr, game_rules.clone());
 
-    println!("Checking the first guess...");
-    checker.clone().check(g1);
-    checker.current_trails += 11;
-    println!("Checking the second guess...");
-    let fl = checker.clone().check(g2);
-    println!("fl: {}", fl);
-    checker.current_trails += 1;
+    let guesser = Guesser::new(game_rules.clone());
+
+    while checker.current_trails <= game_rules.no_of_trials {
+        
+        println!("Times guessed: {}/{}", checker.current_trails, game_rules.no_of_trials);
+
+        let guess = guesser.predict();
+        let mut guess_arr: [&str; 4] = ["0", "0", "0", "0"];
+        for i in 0..guess.len() {
+            guess_arr[i] = &guess[i];
+        }
+        let response = checker.clone().check(guess_arr);
+        checker.current_trails += 1;
+
+        println!("");
+
+        if response == 1 {
+            println!("You won!");
+            break;
+        } else if response == -1 {
+            println!("You lost!");
+            break;
+        }
+    }
 
 }
 
