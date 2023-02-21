@@ -14,7 +14,6 @@ impl Guesser {
         loop {
             let arr = self.get_prediction();
             if self.filter(arr.clone()) {
-                println!("True");
                 return arr;
             }
             println!("Please enter a valid prediction of size {}!", self.game_rules.pattern_size);
