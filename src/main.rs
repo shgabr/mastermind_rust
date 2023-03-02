@@ -2,6 +2,7 @@
 
 mod game_rules;
 use game_rules::GameRules;
+use game_rules::TypeOfChoices;
 
 mod checker;
 use checker::Checker;
@@ -9,8 +10,9 @@ use checker::Checker;
 mod guesser;
 use guesser::Guesser;
 
+// use rand::{seq::IteratorRandom, thread_rng};
 
-fn get_input_game () -> (i32, i32, i32, i32){
+fn get_input_game () -> (i32, i32, i32, i32, TypeOfChoices){
 
     fn get_input () -> i32 {
         let mut input = String::new();
@@ -22,6 +24,7 @@ fn get_input_game () -> (i32, i32, i32, i32){
     let pattern_size: i32;
     let hints_difficulty: i32;
     let no_of_options: i32;
+    let type_of_choices: TypeOfChoices;
 
     println!("Enter the number of trials: ");
     no_of_trials = get_input ();
@@ -35,7 +38,10 @@ fn get_input_game () -> (i32, i32, i32, i32){
     println!("Enter the number of options: ");
     no_of_options = get_input ();
 
-    return (no_of_trials, pattern_size, hints_difficulty, no_of_options);
+    println!("Enter the type of choices: (0: Colors, 1: Numbers)");
+    type_of_choices = TypeOfChoices::new(get_input());
+
+    return (no_of_trials, pattern_size, hints_difficulty, no_of_options, type_of_choices);
 
     // println!("Enter the type of choices: ");
 
@@ -49,7 +55,7 @@ fn create_game() -> GameRules {
     let mut pattern_size: i32 = 4;
     let mut hints_difficulty: i32 = 1;
     let mut no_of_options: i32 = 6;
-    let type_of_choices: game_rules::TypeOfChoices = game_rules::TypeOfChoices::Colors;
+    let mut type_of_choices: TypeOfChoices = TypeOfChoices::Colors;
     let mut game_rule: GameRules = GameRules::new(no_of_trials, pattern_size, hints_difficulty, no_of_options, type_of_choices);
 
     print!("DEFAULT GAME RULES:\n");
@@ -63,8 +69,9 @@ fn create_game() -> GameRules {
     let input = input.trim();
 
     if input == "y" {
-        (no_of_trials, pattern_size, hints_difficulty, no_of_options) = get_input_game();
-        let type_of_choices: game_rules::TypeOfChoices = game_rules::TypeOfChoices::Colors;
+        let type_of_choices: TypeOfChoices;
+        (no_of_trials, pattern_size, hints_difficulty, no_of_options, type_of_choices) = get_input_game();
+        // let type_of_choices: game_rules::TypeOfChoices = game_rules::TypeOfChoices::Colors;
         game_rule = GameRules::new(no_of_trials, pattern_size, hints_difficulty, no_of_options, type_of_choices);
     }
     println!("******************************");
@@ -73,8 +80,18 @@ fn create_game() -> GameRules {
 }
 
 fn play_game(game_rules: GameRules) {
+ 
 
-    let arr = ["1", "2", "3", "4"];
+    // let choices = game_rules.choices.clone();
+    // choices.iter().choose_multiple(&mut thread_rng(), game_rules.pattern_size as usize);
+    // println!("{:?}", choices);
+
+
+    let arr = game_rules.choices.clone();
+
+    // choices.shuffle(&mut rand::thread_rng());
+    // let arr = choices[0..game_rules.pattern_size as usize].to_vec();
+    // let arr = ["1", "2", "3", "4"];
 
     let mut checker = Checker::new(arr, game_rules.clone());
 
@@ -85,11 +102,12 @@ fn play_game(game_rules: GameRules) {
         println!("Times guessed: {}/{}", checker.current_trails, game_rules.no_of_trials);
 
         let guess = guesser.predict();
-        let mut guess_arr: [&str; 4] = ["0", "0", "0", "0"];
-        for i in 0..guess.len() {
-            guess_arr[i] = &guess[i];
-        }
-        let response = checker.clone().check(guess_arr);
+        // let mut guess_arr: [&str; 4] = ["0", "0", "0", "0"];
+        // for i in 0..guess.len() {
+        //     guess_arr[i] = &guess[i];
+        // }
+        // let guess_arr = demo(guess);
+        let response = checker.clone().check(guess);
         checker.current_trails += 1;
 
         println!("");

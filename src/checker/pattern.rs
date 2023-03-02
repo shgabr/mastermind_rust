@@ -3,41 +3,41 @@ use std::collections::HashMap;
 use std::hash::Hash;
 
 #[derive(Clone)]
-pub struct Pattern <T, const N: usize>
+pub struct Pattern <T>
 where
     T: Eq + Hash + Clone
 {
-    pub pattern: [T; N],
+    pub pattern: Vec<T>,
     pub size: usize,
     pub indices: HashMap<T, usize>,
 }
 
-impl <T, const N:usize> Pattern <T, N> 
+impl <T> Pattern <T> 
 where
     T: Eq + Hash + Clone
 {
-    pub fn new(arr: [T; N], hash: bool) -> Self {
+    pub fn new(arr: Vec<T>, hash: bool) -> Self {
 
         if hash {
             let mut indices = HashMap::new();
-            for i in 0..N {
+            for i in 0..arr.len() {
                 indices.insert((arr[i]).clone(), i);
             }
             return Pattern {
-                pattern: arr,
-                size: N,
+                pattern: arr.clone(),
+                size: arr.len(),
                 indices,
             }
         }
         Pattern {
-            pattern: arr,
-            size: N,
+            pattern: arr.clone(),
+            size: arr.len(),
             indices: HashMap::new(),
         }
     }
 
-    pub fn get_equality(&self, other: &Pattern<T, N>) -> bool {
-        for i in 0..N {
+    pub fn get_equality(&self, other: &Pattern<T>) -> bool {
+        for i in 0..self.size {
             if self.pattern[i] != other.pattern[i] {
                 return false;
             }
