@@ -103,7 +103,7 @@ fn play_game(game_rules: GameRules) {
 
     while checker.current_trails <= game_rules.no_of_trials {
         
-        println!("Times guessed: {}/{}", checker.current_trails, game_rules.no_of_trials);
+        println!("Current guess: {}/{}", checker.current_trails, game_rules.no_of_trials);
 
         let guess = guesser.predict();
         let response = checker.clone().check(guess);
