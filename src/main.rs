@@ -10,7 +10,7 @@ use checker::Checker;
 mod guesser;
 use guesser::Guesser;
 
-// use rand::{seq::IteratorRandom, thread_rng};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 fn get_input_game () -> (i32, i32, i32, i32, TypeOfChoices){
 
@@ -32,7 +32,7 @@ fn get_input_game () -> (i32, i32, i32, i32, TypeOfChoices){
     println!("Enter the pattern size: ");
     pattern_size = get_input ();
 
-    println!("Enter the hints difficulty: ");
+    println!("Enter the hints difficulty (0: easy | 1: medium | 2: hard): ");
     hints_difficulty = get_input ();
 
     println!("Enter the number of options: ");
@@ -55,7 +55,7 @@ fn create_game() -> GameRules {
     let mut pattern_size: i32 = 4;
     let mut hints_difficulty: i32 = 1;
     let mut no_of_options: i32 = 6;
-    let mut type_of_choices: TypeOfChoices = TypeOfChoices::Colors;
+    let type_of_choices: TypeOfChoices = TypeOfChoices::Colors;
     let mut game_rule: GameRules = GameRules::new(no_of_trials, pattern_size, hints_difficulty, no_of_options, type_of_choices);
 
     print!("DEFAULT GAME RULES:\n");
@@ -81,19 +81,23 @@ fn create_game() -> GameRules {
 
 fn play_game(game_rules: GameRules) {
  
+    let mut arr = game_rules.choices.clone();
+    let mut ptrn: Vec<String> = Vec::new();
 
-    // let choices = game_rules.choices.clone();
-    // choices.iter().choose_multiple(&mut thread_rng(), game_rules.pattern_size as usize);
-    // println!("{:?}", choices);
+    for i in 0..game_rules.pattern_size {
+        let mut random_number: usize;
+        loop {
+            random_number = random_int(0, game_rules.no_of_choices-1, i) as usize;  
+            if arr[random_number] != ""  {
+                break;
+            }
+        }
+        ptrn.push(arr[random_number].clone());
+        arr[random_number] = "".to_string();
+    }
+    println!("{:?}", ptrn);
 
-
-    let arr = game_rules.choices.clone();
-
-    // choices.shuffle(&mut rand::thread_rng());
-    // let arr = choices[0..game_rules.pattern_size as usize].to_vec();
-    // let arr = ["1", "2", "3", "4"];
-
-    let mut checker = Checker::new(arr, game_rules.clone());
+    let mut checker = Checker::new(ptrn, game_rules.clone());
 
     let guesser = Guesser::new(game_rules.clone());
 
@@ -102,11 +106,6 @@ fn play_game(game_rules: GameRules) {
         println!("Times guessed: {}/{}", checker.current_trails, game_rules.no_of_trials);
 
         let guess = guesser.predict();
-        // let mut guess_arr: [&str; 4] = ["0", "0", "0", "0"];
-        // for i in 0..guess.len() {
-        //     guess_arr[i] = &guess[i];
-        // }
-        // let guess_arr = demo(guess);
         let response = checker.clone().check(guess);
         checker.current_trails += 1;
 
@@ -136,4 +135,12 @@ fn main() {
     println!("Game is starting...\n");
 
     play_game(game_rule);
+}
+
+fn random_int(min: i32, max: i32, seeder: i32) -> i32 {
+    let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+    let seed = now.as_secs() * 1_000 + u64::from(now.subsec_nanos()) * 1_000 + (seeder * 1_111)  as u64;
+    let x = (seed % 2097152) as f64;
+    let rand = ((x * 34359738337.0 + 12345.0) % 2097152.0) / 2097152.0;
+    (rand * (max - min + 1) as f64).floor() as i32 + min
 }

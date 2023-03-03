@@ -16,7 +16,7 @@ impl Guesser {
             if self.filter(arr.clone()) {
                 return arr;
             }
-            println!("Please enter a valid prediction of size {}!", self.game_rules.pattern_size);
+            println!("Please enter a valid prediction of size {} and from the choices {:?}!", self.game_rules.pattern_size, self.game_rules.choices);
         }
     }
     fn get_prediction (&self) -> Vec<String> {
@@ -39,7 +39,7 @@ impl Guesser {
     }
 
     fn filter (&self, pred : Vec<String>) ->  bool {
-        return pred.len() == (self.game_rules.pattern_size as usize);
+        return pred.len() == (self.game_rules.pattern_size as usize) && pred.iter().all(|x| self.game_rules.choices.contains(x));
     }
 
 }
