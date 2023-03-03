@@ -33,15 +33,18 @@ where
         let mut right_guess = 0;
         let mut wrong_place = 0;
         let mut right_indices = Vec::new();
+        let mut elements_guessed: Vec<T> = Vec::new();  // to handle duplicate elements in guess 
         for i in 0..truth.size {
             if truth.pattern[i] == guess.pattern[i] {
                 right_guess += 1;
                 right_indices.push(i as i32);
+                elements_guessed.push(truth.pattern[i].clone());
             }
         }
         for i in 0..truth.size {
-            if !right_indices.contains(&(i as i32)) {
+            if !right_indices.contains(&(i as i32)) && !elements_guessed.contains(&guess.pattern[i]) {
                 if truth.indices.contains_key(&guess.pattern[i]) {
+                    elements_guessed.push(guess.pattern[i].clone());
                     wrong_place += 1;
                 }
             }
