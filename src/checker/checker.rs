@@ -43,4 +43,7 @@ where
         self.hint.provide_hint(self.pattern, guess);
         0
     }
+    pub fn get_pattern (&self) -> Vec<T> {
+        self.pattern.pattern.clone()
+    }
 }

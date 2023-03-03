@@ -95,7 +95,7 @@ fn play_game(game_rules: GameRules) {
         ptrn.push(arr[random_number].clone());
         arr[random_number] = "".to_string();
     }
-    println!("{:?}", ptrn);
+    // println!("{:?}", ptrn);
 
     let mut checker = Checker::new(ptrn, game_rules.clone());
 
@@ -116,6 +116,7 @@ fn play_game(game_rules: GameRules) {
             break;
         } else if response == -1 {
             println!("You lost!");
+            println!("The pattern was: {:?}", checker.get_pattern());
             break;
         }
     }
