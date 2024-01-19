@@ -1,3 +1,3 @@
 
 mod guesser;
-pub use guesser::guesser::Guesser;
+pub use self::guesser::Guesser;

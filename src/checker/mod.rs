@@ -1,6 +1,6 @@
 
 mod checker;
-pub use checker::checker::Checker;
+pub use self::checker::Checker;
 
 mod hint;
 pub use self::hint::Hint;

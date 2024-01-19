@@ -1,6 +1,6 @@
 
 mod game_rules;
-pub use game_rules::game_rules::GameRules;
+pub use self::game_rules::GameRules;
 // pub use game_rules::game_rules::TypeOfChoices;
 
 mod options;
